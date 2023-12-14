@@ -10,7 +10,9 @@ cart_icon.addEventListener('click', ()=>{
 
 
 let listCards  = [];
-
+function updateLocalStorage() {
+    saveCartToLocalStorage(); // Save cart to localStorage when updates occur
+}
 
 function addToCard(key){
     
@@ -24,9 +26,11 @@ console.log('hi')
         listCards[key].quantity += 1; // Increment the quantity if the item exists
     }
     
-    saveCartToLocalStorage();
+    updateLocalStorage(); 
     reloadCard();
-}let total = document.querySelector('.total');
+}
+
+let total = document.querySelector('.total');
 let quantity = document.querySelector('.quantity');
 
 function reloadCard(){
@@ -58,7 +62,7 @@ function reloadCard(){
     })
     total.innerText = `Total :$${totalPrice}`.toLocaleString();
     quantity.innerText = count;
-    
+    updateLocalStorage();
 }
 function changeQuantity(key, quantity){
     if(quantity == 0){
@@ -67,6 +71,7 @@ function changeQuantity(key, quantity){
         listCards[key].quantity = quantity;
         listCards[key].price = quantity * Menulists[key].price;
     }
+    updateLocalStorage();
     reloadCard();
    
 }
