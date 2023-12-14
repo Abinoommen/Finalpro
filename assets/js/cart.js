@@ -1,20 +1,25 @@
 
-const cart_icon = document.getElementById('cart-icon');
 
-cart_icon.addEventListener('click', ()=>{
+
+function cart_icon(){
   const cartbox = document.querySelector('.cart-box')
 
   cartbox.classList.toggle('active')
 
-})
+}
 
 
 let listCards  = [];
 
+function updateLocalStorage() {
+    saveCartToLocalStorage(); // Save cart to localStorage when updates occur
+}
+
+
 
 function addToCard(key){
     
-console.log('hi')
+if(localStorage.getItem('loggedIn')) {
     if(listCards[key] == null){
         // copy product form list to list card
         listCards[key] = JSON.parse(JSON.stringify(Menulists[key]));
@@ -26,6 +31,9 @@ console.log('hi')
     
     updateLocalStorage(); 
     reloadCard();
+} else {
+    alert('please log in')
+}
 }
 let total = document.getElementById('total');
 let quantity = document.querySelector('.quantity');
@@ -69,8 +77,9 @@ function changeQuantity(key, quantity){
         listCards[key].quantity = quantity;
         listCards[key].price = quantity * Menulists[key].price;
     }
-    reloadCard();
     updateLocalStorage();
+    reloadCard();
+    
 }
 
 function saveCartToLocalStorage() {
@@ -84,9 +93,6 @@ function loadCartFromLocalStorage() {
     }
 }
 
-function updateLocalStorage() {
-    saveCartToLocalStorage(); // Save cart to localStorage when updates occur
-}
 
 
 // Function to load cart items from localStorage and display in the table
@@ -125,7 +131,7 @@ function displayCartFromLocalStorage() {
             `;
 
             quantityColumn.textContent = item.quantity;
-            priceColumn.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
+            priceColumn.textContent = `$${(item.price).toFixed(2)}`;
 
             // Append columns to the row
             newRow.appendChild(productNameColumn);
@@ -136,7 +142,7 @@ function displayCartFromLocalStorage() {
             cartTable.appendChild(newRow);
 
             // Calculate the total price
-            total += item.price * item.quantity;
+            total += item.price;
         });
 
         // Display the total price

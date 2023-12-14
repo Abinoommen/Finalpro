@@ -360,6 +360,22 @@ img{
   z-index: 999;
 }
 
+@media screen and (max-width: 700px){
+  .active {
+    height: 600px;
+    background-color: #FFF;
+    color: #27302C;
+    right: 0;
+    top: 80px;
+    width: 100%;
+    overflow-y: scroll;
+    position: fixed;
+    transition: 0.5s;
+    z-index: 999;
+  }
+  }
+
+
 .cart-box h1{
   color: #E8BC0E;
   font-weight: 100;
