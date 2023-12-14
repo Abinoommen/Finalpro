@@ -20,6 +20,11 @@ console.log('hi')
         listCards[key] = JSON.parse(JSON.stringify(Menulists[key]));
         listCards[key].quantity = 1;
     }
+    else {
+        listCards[key].quantity += 1; // Increment the quantity if the item exists
+    }
+    
+    saveCartToLocalStorage();
     reloadCard();
 }let total = document.querySelector('.total');
 let quantity = document.querySelector('.quantity');
@@ -30,7 +35,7 @@ function reloadCard(){
     let count = 0;
     let totalPrice = 0;
    
-   
+  
 
     
     listCards.forEach((value, key)=>{
@@ -48,10 +53,12 @@ function reloadCard(){
                     <button onclick="changeQuantity(${key}, ${value.quantity + 1})">+</button>
                 </div>`;
                 listCard.appendChild(newDiv);
+                
         }
     })
     total.innerText = `Total :$${totalPrice}`.toLocaleString();
     quantity.innerText = count;
+    
 }
 function changeQuantity(key, quantity){
     if(quantity == 0){
@@ -61,4 +68,19 @@ function changeQuantity(key, quantity){
         listCards[key].price = quantity * Menulists[key].price;
     }
     reloadCard();
+   
 }
+
+function saveCartToLocalStorage() {
+    localStorage.setItem('cartItems', JSON.stringify(listCards));
+}
+function loadCartFromLocalStorage() {
+    const storedCartItems = localStorage.getItem('cartItems');
+    if (storedCartItems) {
+        listCards = JSON.parse(storedCartItems);
+        reloadCard();
+    }
+}
+
+// Call the function to load cart items from localStorage
+loadCartFromLocalStorage();
