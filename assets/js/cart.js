@@ -10,9 +10,7 @@ cart_icon.addEventListener('click', ()=>{
 
 
 let listCards  = [];
-function updateLocalStorage() {
-    saveCartToLocalStorage(); // Save cart to localStorage when updates occur
-}
+
 
 function addToCard(key){
     
@@ -29,8 +27,7 @@ console.log('hi')
     updateLocalStorage(); 
     reloadCard();
 }
-
-let total = document.querySelector('.total');
+let total = document.getElementById('total');
 let quantity = document.querySelector('.quantity');
 
 function reloadCard(){
@@ -62,7 +59,8 @@ function reloadCard(){
     })
     total.innerText = `Total :$${totalPrice}`.toLocaleString();
     quantity.innerText = count;
-    updateLocalStorage();
+    updateLocalStorage(); 
+    
 }
 function changeQuantity(key, quantity){
     if(quantity == 0){
@@ -71,9 +69,8 @@ function changeQuantity(key, quantity){
         listCards[key].quantity = quantity;
         listCards[key].price = quantity * Menulists[key].price;
     }
-    updateLocalStorage();
     reloadCard();
-   
+    updateLocalStorage();
 }
 
 function saveCartToLocalStorage() {
@@ -87,5 +84,70 @@ function loadCartFromLocalStorage() {
     }
 }
 
+function updateLocalStorage() {
+    saveCartToLocalStorage(); // Save cart to localStorage when updates occur
+}
+
+
+// Function to load cart items from localStorage and display in the table
+function displayCartFromLocalStorage() {
+    const cartTable = document.getElementById('cartTable');
+    const totalElement = document.getElementById('total1');
+
+    let total = 0;
+
+    // Retrieve cart items from localStorage
+    const storedCartItems = localStorage.getItem('cartItems');
+
+    if (storedCartItems) {
+        const cartItems = JSON.parse(storedCartItems);
+
+        cartItems.forEach((item) => {
+            // Create a new row for each item
+            const newRow = document.createElement('tr');
+
+            // Create columns for product name, quantity, and price
+            const productNameColumn = document.createElement('td');
+            const quantityColumn = document.createElement('td');
+            const priceColumn = document.createElement('td');
+
+            // Set content for each column
+            productNameColumn.innerHTML = `
+                <div class="cart-info">
+                    <img src="./assets/img/${item.image}" alt="">
+                    <div>
+                        <p>${item.name}</p>
+                        <small>Price: $${item.price}</small>
+                        <br>
+                        <a href="#">Remove</a>
+                    </div>
+                </div>
+            `;
+
+            quantityColumn.textContent = item.quantity;
+            priceColumn.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
+
+            // Append columns to the row
+            newRow.appendChild(productNameColumn);
+            newRow.appendChild(quantityColumn);
+            newRow.appendChild(priceColumn);
+
+            // Append the row to the table
+            cartTable.appendChild(newRow);
+
+            // Calculate the total price
+            total += item.price * item.quantity;
+        });
+
+        // Display the total price
+        totalElement.textContent = `$${total.toFixed(2)}`;
+    }
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    displayCartFromLocalStorage();
+});
 // Call the function to load cart items from localStorage
 loadCartFromLocalStorage();
